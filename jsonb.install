@@ -1,6 +1,34 @@
 <?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the jsonb module.
+ */
 
-use Drupal\Core\Database\Database;
+/**
+ * Implements hook_field_schema().
+ *
+ * @see http://drupal.org/node/146939
+ * @see schemaapi
+ * @see hook_field_schema()
+ *
+ * @ingroup jsonb
+ */
+function jsonb_field_schema($field) {
+  assert(in_array($field['type'], ['json', 'jsonb']), new RuntimeException('Someone tried to get schema info a JSON/JSONB field with an invalid type. Something is very wrong.'));
+
+  return [
+    'columns' => [
+      'value' => [
+        'type' => 'text',
+        // For MySQL only. PostgreSQL only uses sizes on ints and varchars.
+        'size' => 'big',
+        // Will be json or jsonb depending on the field type.
+        'pgsql_type' => $field['type'],
+        'not null' => FALSE,
+      ],
+    ],
+  ];
+}
 
 /**
  * Implements hook_requirements().
@@ -12,7 +40,7 @@ function jsonb_requirements($phase) {
     $type = Database::getConnection()->databaseType();
     $version = explode('.', Database::getConnection()->version());
 
-    // ensure we are running on a PostgreSQL database and we have the right version installed.
+    // Ensure we are running on a PostgreSQL database and we have the right version installed.
     if ($type != 'pgsql') {
       $requirements['jsonb'] = array(
         'title' => t('JSON/JSONB Field'),
@@ -20,8 +48,9 @@ function jsonb_requirements($phase) {
         'severity' => REQUIREMENT_ERROR,
         'description' => t('Only PostgreSQL is supported currently. You are running @type.', array('@type' => $type)),
       );
-    } else {
-      if ($version[0] < 9) {
+    }
+    else {
+      if ($version[0] < 9 || ($version[0] == 9 && $version[1] < 2)) {
         $requirements['jsonb'] = array(
           'title' => t('JSON/JSONB Field'),
           'value' => t('PostgreSQL version not supported'),
@@ -33,9 +62,9 @@ function jsonb_requirements($phase) {
       if ($version[0] == 9 && $version[1] < 4) {
         $requirements['jsonb'] = array(
           'title' => t('JSON/JSONB Field'),
-          'value' => t('PostgreSQL version not supported'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => t('To support the JSON format, you need to be on at least version 9.2 of PostgreSQL, and 9.4 for JSONB. You are running @version.', array('@version' => Database::getConnection()->version())),
+          'value' => t('PostgreSQL version partially supported'),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('To support the JSONB format, you need to be on at least version 9.4 of PostgreSQL. You are running @version.', array('@version' => Database::getConnection()->version())),
         );
       }
     }

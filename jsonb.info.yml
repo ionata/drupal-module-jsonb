@@ -1,6 +1,0 @@
-name: JSON/JSONB Field
-type: module
-description: Creates fields that use the JSON/JSONB data type to store JSON object data in Postgres. MySQL not yet supported (version 5.7.7+ forthcoming). <br><strong>Requires Postgres 9.2 (9.4 for JSONB) and this core patch:</strong> <a href="https://www.drupal.org/node/2472709" target="_blank">https://www.drupal.org/node/2472709</a>.
-core: 8.x
-dependencies:
-  - field
