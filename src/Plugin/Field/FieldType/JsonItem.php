@@ -8,7 +8,6 @@
 namespace Drupal\jsonb\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -33,6 +32,8 @@ class JsonItem extends FieldItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'json',
+          'pgsql_type' => 'json',
+          'mysql_type' => 'json',
           'not null' => FALSE,
         ),
       ),

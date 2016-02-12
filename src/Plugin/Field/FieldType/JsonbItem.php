@@ -7,8 +7,6 @@
 
 namespace Drupal\jsonb\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -24,7 +22,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_formatter = "jsonb_default"
  * )
  */
-class JsonbItem extends FieldItemBase {
+class JsonbItem extends JsonItem {
   /**
    * {@inheritdoc}
    */
@@ -32,19 +30,13 @@ class JsonbItem extends FieldItemBase {
     return array(
       'columns' => array(
         'value' => array(
-          'type' => 'jsonb',
+          'type' => 'text',
+          'pgsql_type' => 'jsonb',
+          'mysql_type' => 'json',
           'not null' => FALSE,
         ),
       ),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEmpty() {
-    $value = $this->get('value')->getValue();
-    return $value === NULL || $value === '';
   }
 
   /**
