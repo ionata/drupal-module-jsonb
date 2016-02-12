@@ -14,9 +14,13 @@ function jsonb_requirements($phase) {
     $type = Database::getConnection()->databaseType();
     $version = explode('.', Database::getConnection()->version());
 
+    $major = (int) $version[0];
+    $minor = (int) $version[1];
+    $patch = (int) $version[2];
+
     switch ($type) {
       case 'pgsql':
-        if ($version[0] < 9) {
+        if ($major < 9) {
           $requirements['jsonb'] = [
             'title' => t('JSON/JSONB Field'),
             'value' => t('PostgreSQL version not supported'),
@@ -29,7 +33,7 @@ function jsonb_requirements($phase) {
           ];
         }
 
-        if ($version[0] == 9 && $version[1] < 4) {
+        if ($major == 9 && $minor < 4) {
           $requirements['jsonb'] = [
             'title' => t('JSON/JSONB Field'),
             'value' => t('PostgreSQL version not supported'),
@@ -45,10 +49,8 @@ function jsonb_requirements($phase) {
         break;
 
       case 'mysql':
-        // some minor versions are not always numbers.. need a better fix for this in the future
-        $minor = (int) $version[2];
-
-        if ($version[0] == 5 && $version[1] < 7 && $minor < 7) {
+        if ($major == 5 && $minor < 7) {
+          // not at least 5.7.x
           $requirements['jsonb'] = [
             'title' => t('JSON/JSONB Field'),
             'value' => t('MySQL version not supported'),
@@ -61,10 +63,26 @@ function jsonb_requirements($phase) {
           ];
         }
 
+        if ($major == 5 and $minor == 7) {
+          if ($patch < 7) {
+            // not at least 5.7.7
+            $requirements['jsonb'] = [
+              'title' => t('JSON/JSONB Field'),
+              'value' => t('MySQL version not supported'),
+              'severity' => REQUIREMENT_ERROR,
+              'description' => t('To support the JSON format, you need to be on at least version 5.7.7 of MySQL. You are running @version.',
+                [
+                  '@version' => Database::getConnection()->version()
+                ]
+              ),
+            ];
+          }
+        }
+
         break;
 
       case 'mariadb':
-        if ($version[0] < 10) {
+        if ($major < 10) {
           $requirements['jsonb'] = [
             'title' => t('JSON/JSONB Field'),
             'value' => t('MariaDB version not supported'),
@@ -77,7 +95,7 @@ function jsonb_requirements($phase) {
           ];
         }
 
-        if ($version[0] == 10 && $version[1] < 10) {
+        if ($major == 10 && $minor < 10) {
           $requirements['jsonb'] = [
             'title' => t('JSON/JSONB Field'),
             'value' => t('MariaDB version not supported'),
