@@ -12,119 +12,19 @@ function jsonb_requirements($phase) {
 
   if ($phase == 'install' || $phase == 'runtime') {
     $type = Database::getConnection()->databaseType();
-    $version = explode('.', Database::getConnection()->version());
+    $version = Database::getConnection()->version();
 
-    $major = (int) $version[0];
-    $minor = (int) $version[1];
-    $patch = (int) $version[2];
-
-    switch ($type) {
-      case 'pgsql':
-        if ($major < 9) {
-          $requirements['jsonb'] = [
-            'title' => t('JSON/JSONB Field'),
-            'value' => t('PostgreSQL version not supported'),
-            'severity' => REQUIREMENT_ERROR,
-            'description' => t('To support the JSON format, you need to be on at least version 9.2 of PostgreSQL, and 9.4 for JSONB. You are running @version.',
-              [
-                '@version' => Database::getConnection()->version()
-              ]
-            ),
-          ];
-        }
-
-        if ($major == 9 && $minor < 4) {
-          $requirements['jsonb'] = [
-            'title' => t('JSON/JSONB Field'),
-            'value' => t('PostgreSQL version not supported'),
-            'severity' => REQUIREMENT_ERROR,
-            'description' => t('To support the JSON format, you need to be on at least version 9.2 of PostgreSQL, and 9.4 for JSONB. You are running @version.',
-              [
-                '@version' => Database::getConnection()->version()
-              ]
-            ),
-          ];
-        }
-
-        break;
-
-      case 'mysql':
-        if ($major == 5 && $minor < 7) {
-          // not at least 5.7.x
-          $requirements['jsonb'] = [
-            'title' => t('JSON/JSONB Field'),
-            'value' => t('MySQL version not supported'),
-            'severity' => REQUIREMENT_ERROR,
-            'description' => t('To support the JSON format, you need to be on at least version 5.7.7 of MySQL. You are running @version.',
-              [
-                '@version' => Database::getConnection()->version()
-              ]
-            ),
-          ];
-        }
-
-        if ($major == 5 and $minor == 7) {
-          if ($patch < 7) {
-            // not at least 5.7.7
-            $requirements['jsonb'] = [
-              'title' => t('JSON/JSONB Field'),
-              'value' => t('MySQL version not supported'),
-              'severity' => REQUIREMENT_ERROR,
-              'description' => t('To support the JSON format, you need to be on at least version 5.7.7 of MySQL. You are running @version.',
-                [
-                  '@version' => Database::getConnection()->version()
-                ]
-              ),
-            ];
-          }
-        }
-
-        break;
-
-      case 'mariadb':
-        if ($major < 10) {
-          $requirements['jsonb'] = [
-            'title' => t('JSON/JSONB Field'),
-            'value' => t('MariaDB version not supported'),
-            'severity' => REQUIREMENT_ERROR,
-            'description' => t('To support the JSON format, you need to be on at least version 10.10.x of MariaDB. You are running @version.',
-              [
-                '@version' => Database::getConnection()->version()
-              ]
-            ),
-          ];
-        }
-
-        if ($major == 10 && $minor < 10) {
-          $requirements['jsonb'] = [
-            'title' => t('JSON/JSONB Field'),
-            'value' => t('MariaDB version not supported'),
-            'severity' => REQUIREMENT_ERROR,
-            'description' => t('To support the JSON format, you need to be on at least version 10.10.x of MariaDB. You are running @version.',
-              [
-                '@version' => Database::getConnection()->version()
-              ]
-            ),
-          ];
-        }
-
-        break;
-
-      default:
-        $requirements['jsonb'] = [
-          'title' => t('JSON/JSONB Field'),
-          'value' => t('Database version not supported.'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => t('Only PostgreSQL (9.2+), MariaDB (10.10.x+) and MySQL (5.7.7+) are supported. You are running @type @version.',
-            [
-              '@type' => $type,
-              '@version' => Database::getConnection()->version()
-            ]
-          ),
-        ];
-
-        break;
-    }
+    $requirements['jsonb'] = [
+      'title' => t('JSON/JSONB Field'),
+      'value' => t('Database version'),
+      'severity' => REQUIREMENT_INFO,
+      'description' => t('To support the JSON/JSONB format, you need to be on at least version 5.7.7 of MySQL, 9.2+ of PostgresSQL, or 10.10.x of MariaDB. You are running @type @version.',
+        [
+          '@type' => $type,
+          '@version' => $version
+        ]
+      ),
+    ];
   }
 
   return $requirements;
