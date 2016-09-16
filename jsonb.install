@@ -9,23 +9,5 @@ use Drupal\Core\Database\Database;
  */
 function jsonb_requirements($phase) {
   $requirements = [];
-
-  if ($phase == 'install' || $phase == 'runtime') {
-    $type = Database::getConnection()->databaseType();
-    $version = Database::getConnection()->version();
-
-    $requirements['jsonb'] = [
-      'title' => t('JSON/JSONB Field'),
-      'value' => t('Database version'),
-      'severity' => REQUIREMENT_INFO,
-      'description' => t('To support the JSON/JSONB format, you need to be on at least version 5.7.7 of MySQL, 9.2+ of PostgresSQL, or 10.10.x of MariaDB. You are running @type @version.',
-        [
-          '@type' => $type,
-          '@version' => $version
-        ]
-      ),
-    ];
-  }
-
   return $requirements;
 }
