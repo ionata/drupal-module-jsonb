@@ -20,7 +20,8 @@ use Drupal\Component\Serialization\Json as Json;
  *   id = "jsonb_textarea",
  *   label = @Translation("JSONB Object"),
  *   field_types = {
- *     "jsonb"
+ *     "jsonb",
+ *     "json",
  *   }
  * )
  */
