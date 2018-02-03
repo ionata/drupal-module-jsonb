@@ -147,17 +147,19 @@ function jsonb_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   $widget = $element;
   $widget['#delta'] = $delta;
 
-  if ($instance['widget']['type'] == 'jsonb_textarea') {
-    $widget += [
-      '#type' => 'textarea',
-      '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
-      '#rows' => 10,
-      '#attributes' => ['class' => ['jsonb-textarea']],
-      '#attached' => [
-        'css' => [drupal_get_path('module', 'jsonb') . '/css/jsonb.admin.css'],
-      ],
-      '#access' => $instance['widget']['settings']['ui_edit'] != JSONB_UI_EDIT_HIDE,
-    ];
+  if (isset($instance['widget']['settings']['ui_edit'])) {
+    if ($instance['widget']['type'] == 'jsonb_textarea') {
+      $widget += [
+        '#type' => 'textarea',
+        '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+        '#rows' => 10,
+        '#attributes' => ['class' => ['jsonb-textarea']],
+        '#attached' => [
+          'css' => [drupal_get_path('module', 'jsonb') . '/css/jsonb.admin.css'],
+        ],
+        '#access' => $instance['widget']['settings']['ui_edit'] != JSONB_UI_EDIT_HIDE,
+      ];
+    }
   }
 
   $element['value'] = $widget;
