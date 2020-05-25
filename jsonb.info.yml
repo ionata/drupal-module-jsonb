@@ -3,4 +3,4 @@ type: module
 description: Creates field types that use the JSON/JSONB data type to store JSON object data.
 core: 8.x
 dependencies:
-  - field
+  - drupal:field
