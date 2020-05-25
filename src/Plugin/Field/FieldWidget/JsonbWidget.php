@@ -7,11 +7,10 @@
 
 namespace Drupal\jsonb\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Serialization\Json as Json;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\Unicode as Unicode;
-use Drupal\Component\Serialization\Json as Json;
 
 /**
  * Plugin implementation of the 'jsonb_textarea' widget.
@@ -44,7 +43,7 @@ class JsonbWidget extends StringTextareaWidget {
    * @param $form
    */
   public static function validateJsonStructure(&$element, FormStateInterface $form_state, $form) {
-    if (Unicode::strlen($element['value']['#value'])) {
+    if (mb_strlen($element['value']['#value'])) {
       $value = Json::decode($element['value']['#value']);
 
       if (json_last_error() !== JSON_ERROR_NONE) {
