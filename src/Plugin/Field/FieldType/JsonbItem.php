@@ -1,13 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\jsonb\Plugin\Field\FieldType\JsonbItem.
- */
-
 namespace Drupal\jsonb\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -23,29 +19,31 @@ use Drupal\Core\TypedData\DataDefinition;
  * )
  */
 class JsonbItem extends JsonItem {
+
   /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'text',
           'pgsql_type' => 'jsonb',
           'mysql_type' => 'json',
           'not null' => FALSE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('JSONB value'));
-
-    return $properties;
+    return [
+      'value' => DataDefinition::create('string')
+        ->setLabel(new TranslatableMarkup('JSONB value')),
+    ];
   }
+
 }

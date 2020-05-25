@@ -1,11 +1,12 @@
 <?php
 
-use Drupal\Core\Database\Database;
+/**
+ * @file
+ * Contains install and update hooks.
+ */
 
 /**
  * Implements hook_requirements().
- * @param $phase
- * @return array
  */
 function jsonb_requirements($phase) {
   $requirements = [];
