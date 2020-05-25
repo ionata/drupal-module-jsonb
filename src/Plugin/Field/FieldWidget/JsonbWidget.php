@@ -48,7 +48,7 @@ class JsonbWidget extends StringTextareaWidget {
       $value = Json::decode($element['value']['#value']);
 
       if (json_last_error() !== JSON_ERROR_NONE) {
-        $form_state->setError($element['value'], t('!name must contain a valid JSON object.', array('!name' => $element['value']['#title'])));
+        $form_state->setError($element['value'], t('@name must contain a valid JSON object.', ['@name' => $element['#title']]));
       }
     }
   }
