@@ -1,0 +1,11 @@
+{
+  "name": "drupal/jsonb",
+  "description": "JSON/JSONB Field (deprecated)",
+  "type": "drupal-module",
+  "homepage": "http://drupal.org/project/jsonb",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^8.8 || ^9 || ^10"
+  }
+}
